@@ -1,167 +1,163 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MHA Check Up - Premium Health & Wellness</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@0.446.0/dist/umd/lucide.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Smith - Appointment Booking</title>
     <style>
-      html { scroll-behavior: smooth; }
-      [id] { scroll-margin-top: 6rem; }
-      .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
-      .reveal.is-visible { opacity: 1; transform: none; }
-      .spinner { width: 1.1rem; height: 1.1rem; border: 2px solid rgba(255, 255, 255, 0.4); border-top-color: #fff; border-radius: 9999px; animation: spin 0.8s linear infinite; }
-      @keyframes spin { to { transform: rotate(360deg); } }
-      @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        .reveal { opacity: 1; transform: none; transition: none; }
-        .spinner { animation-duration: 2.5s; }
-      }
-      .field-input { width: 100%; border-radius: 0.75rem; border: 1px solid #cbd5e1; background: #fff; padding: 0.75rem 1rem; font-size: 0.875rem; color: #0f172a; transition: border-color 0.2s, box-shadow 0.2s; }
-      .field-input:focus { outline: none; border-color: #0d9488; box-shadow: 0 0 0 4px #ccfbf1; }
-      .field-input.is-invalid { border-color: #fb7185; }
-      .field-error { min-height: 0; font-size: 0.75rem; font-weight: 500; color: #e11d48; }
-      .field-error:empty { display: none; }
-      fieldset:disabled { opacity: 0.85; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .booking-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
+        }
+        h2 { color: #333; margin-bottom: 5px; }
+        .subtitle { color: #666; margin-bottom: 20px; font-size: 0.9em; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .time-slots-note {
+            font-size: 0.8em;
+            color: #2c7be5;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            background-color: #2c7be5;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #1a5eb8; }
+        .message { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; }
+        .success { background-color: #d4edda; color: #155724; display: block; }
+        .error { background-color: #f8d7da; color: #721c24; display: block; }
     </style>
-  </head>
-  <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+</head>
+<body>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
-      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-        <a href="#" id="nav-logo" class="flex items-center gap-3 text-xl font-semibold text-slate-900">
-          <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white">
-            <i data-lucide="activity" class="h-5 w-5"></i>
-          </span>
-          MHA Check Up
-        </a>
-        <nav id="main-nav" class="hidden items-center gap-8 md:flex">
-          <a href="#hero" class="text-sm font-medium text-slate-600 transition-colors hover:text-teal-700">Home</a>
-          <a href="#packages" class="text-sm font-medium text-slate-600 transition-colors hover:text-teal-700">Packages</a>
-          <a href="#services" class="text-sm font-medium text-slate-600 transition-colors hover:text-teal-700">Services</a>
-          <a href="#doctors" class="text-sm font-medium text-slate-600 transition-colors hover:text-teal-700">Doctors</a>
-        </nav>
-        <div class="flex items-center gap-4">
-          <button type="button" id="nav-doctor-login" class="hidden text-sm font-semibold text-slate-600 transition hover:text-teal-700 md:inline-block">Doctor Login</button>
-          <button type="button" data-open-booking class="hidden rounded-full bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700 md:inline-flex">Book Appointment</button>
-          <button type="button" id="menu-toggle" aria-label="Open menu" aria-expanded="false" class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 transition hover:bg-slate-100 md:hidden">
-            <i data-lucide="menu" class="h-5 w-5" id="menu-icon"></i>
-          </button>
+<div class="booking-card">
+    <h2>Book an Appointment</h2>
+    <div class="subtitle">Physician: <strong>Dr. John Smith, MD</strong></div>
+    
+    <form id="bookingForm">
+        <div class="form-group">
+            <label for="name">Your Full Name</label>
+            <input type="text" id="name" required placeholder="John Doe">
         </div>
-      </div>
-      <div id="mobile-menu" class="hidden border-t border-slate-200 bg-white px-6 py-4 md:hidden">
-        <nav class="flex flex-col gap-1">
-          <a href="#hero" class="mobile-link rounded-lg px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50">Home</a>
-          <a href="#packages" class="mobile-link rounded-lg px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50">Packages</a>
-          <a href="#services" class="mobile-link rounded-lg px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50">Services</a>
-          <a href="#doctors" class="mobile-link rounded-lg px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50">Doctors</a>
-          <button type="button" id="mobile-doctor-login" class="mobile-link text-left rounded-lg px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-50">Doctor Login</button>
-        </nav>
-        <button type="button" data-open-booking class="mt-3 w-full rounded-full bg-teal-600 py-3 text-sm font-semibold text-white">Book Appointment</button>
-      </div>
-    </header>
-
-    <!-- Main Patient View -->
-    <main id="main-view" class="block">
-      <!-- Hero Section -->
-      <section id="hero" class="relative isolate overflow-hidden">
-        <img src="https://images.pexels.com/photos/7089614/pexels-photo-7089614.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Modern hospital interior" class="absolute inset-0 -z-10 h-full w-full object-cover object-top" />
-        <div class="absolute inset-0 -z-10 bg-gradient-to-br from-slate-900/90 via-teal-900/80 to-teal-800/70"></div>
-        <div class="mx-auto max-w-7xl px-6 py-24 md:py-32">
-          <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal-200/30 bg-white/10 px-4 py-1.5 text-sm font-medium text-teal-50 backdrop-blur-sm">
-            <i data-lucide="shield-plus" class="h-4 w-4"></i>
-            Redefining Preventive Care
-          </p>
-          <h1 class="reveal mt-6 max-w-3xl text-5xl font-extrabold tracking-tight text-white md:text-7xl">Your Health, <br/><span class="text-teal-400">Our Priority.</span></h1>
-          <p class="reveal mt-6 max-w-2xl text-lg leading-relaxed text-slate-200">Experience world-class preventive healthcare with personalized checkups, expert doctors, and seamless appointment scheduling.</p>
-          <div class="reveal mt-10 flex flex-col gap-4 sm:flex-row">
-            <button type="button" data-open-booking class="inline-flex items-center justify-center gap-2 rounded-full bg-teal-500 px-8 py-4 text-base font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-teal-400 hover:shadow-teal-500/25">
-              <i data-lucide="calendar-plus" class="h-5 w-5"></i>
-              Book Your Visit
-            </button>
-            <a href="#packages" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/5 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/10">
-              View Packages
-              <i data-lucide="arrow-right" class="h-5 w-5"></i>
-            </a>
-          </div>
+        
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required placeholder="john@example.com">
         </div>
-      </section>
-
-      <!-- Packages Section -->
-      <section id="packages" class="bg-white py-24">
-        <div class="mx-auto max-w-7xl px-6">
-          <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-sm font-bold uppercase tracking-widest text-teal-600">Curated Packages</p>
-            <h2 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">Comprehensive Health Checks</h2>
-            <p class="mt-4 text-base text-slate-600">Transparent pricing and specialized tests designed for every stage of your life journey.</p>
-          </div>
-          <div id="packages-grid" class="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-4"></div>
+        
+        <div class="form-group">
+            <label for="phone">WhatsApp Mobile Number</label>
+            <input type="tel" id="phone" required placeholder="+1234567890">
         </div>
-      </section>
-
-      <!-- Services Section -->
-      <section id="services" class="bg-slate-50 py-24">
-        <div class="mx-auto max-w-7xl px-6">
-          <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-sm font-bold uppercase tracking-widest text-teal-600">Clinical Excellence</p>
-            <h2 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">Our Specialties</h2>
-            <p class="mt-4 text-base text-slate-600">Expert care across multiple disciplines to ensure complete diagnostic accuracy and holistic healing.</p>
-          </div>
-          <div id="services-grid" class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"></div>
+        
+        <div class="form-group">
+            <label for="date">Appointment Date</label>
+            <input type="date" id="date" required>
         </div>
-      </section>
-
-      <!-- Doctors Section -->
-      <section id="doctors" class="bg-white py-24">
-        <div class="mx-auto max-w-7xl px-6">
-          <div class="reveal mx-auto max-w-2xl text-center">
-            <p class="text-sm font-bold uppercase tracking-widest text-teal-600">Medical Experts</p>
-            <h2 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">Meet Our Specialists</h2>
-            <p class="mt-4 text-base text-slate-600">Dedicated professionals committed to bringing you the highest standard of personalized medical care.</p>
-          </div>
-          <div id="doctors-grid" class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
+        
+        <div class="form-group">
+            <label for="time">Preferred Time</label>
+            <select id="time" required>
+                <option value="">-- Select a Time Slot --</option>
+                <!-- Morning Shifts -->
+                <optgroup label="Morning (11:00 AM - 2:00 PM)">
+                    <option value="11:00">11:00 AM</option>
+                    <option value="11:30">11:30 AM</option>
+                    <option value="12:00">12:00 PM</option>
+                    <option value="12:30">12:30 PM</option>
+                    <option value="13:00">1:00 PM</option>
+                    <option value="13:30">1:30 PM</option>
+                </optgroup>
+                <!-- Evening Shifts -->
+                <optgroup label="Evening (6:00 PM - 11:00 PM)">
+                    <option value="18:00">6:00 PM</option>
+                    <option value="18:30">6:30 PM</option>
+                    <option value="19:00">7:00 PM</option>
+                    <option value="19:30">7:30 PM</option>
+                    <option value="20:00">8:00 PM</option>
+                    <option value="20:30">8:30 PM</option>
+                    <option value="21:00">9:00 PM</option>
+                    <option value="21:30">9:30 PM</option>
+                    <option value="22:00">10:00 PM</option>
+                    <option value="22:30">10:30 PM</option>
+                </optgroup>
+            </select>
+            <div class="time-slots-note">Note: Bookings are restricted to Dr. Smith's official visiting hours.</div>
         </div>
-      </section>
+        
+        <button type="submit">Confirm Appointment</button>
+    </form>
+    
+    <div id="responseMessage" class="message"></div>
+</div>
 
-      <!-- Booking Section -->
-      <section id="appointment" class="bg-slate-900 py-24">
-        <div class="mx-auto max-w-7xl px-6">
-          <div class="grid gap-12 lg:grid-cols-5 lg:gap-16">
-            <div class="reveal lg:col-span-2">
-              <p class="text-sm font-bold uppercase tracking-widest text-teal-400">Secure Your Slot</p>
-              <h2 class="mt-3 text-3xl font-extrabold text-white md:text-4xl">Book an Appointment</h2>
-              <p class="mt-4 text-base text-slate-400">Select your preferred package, doctor, and an available time slot. Booking is fast, secure, and hassle-free.</p>
-              
-              <ul class="mt-10 space-y-8">
-                <li class="flex items-start gap-4">
-                  <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-500/20 text-teal-400"><i data-lucide="clock" class="h-6 w-6"></i></span>
-                  <div>
-                    <h4 class="text-lg font-semibold text-white">Convenient Timings</h4>
-                    <p class="mt-1 text-sm text-slate-400">Morning slots: 11:00 AM - 2:00 PM<br/>Evening slots: 6:00 PM - 11:00 PM</p>
-                  </div>
-                </li>
-                <li class="flex items-start gap-4">
-                  <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-500/20 text-teal-400"><i data-lucide="shield-check" class="h-6 w-6"></i></span>
-                  <div>
-                    <h4 class="text-lg font-semibold text-white">Instant Registration</h4>
-                    <p class="mt-1 text-sm text-slate-400">Receive a unique token number immediately to track your appointment status.</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
+<script>
+    // Prevent selecting past dates
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').setAttribute('min', today);
 
-            <div class="reveal lg:col-span-3">
-              <!-- Success Panel -->
-              <div id="booking-success" class="hidden flex-col items-center rounded-3xl bg-slate-800 p-10 text-center shadow-xl border border-slate-700">
-                <span class="flex h-20 w-20 items-center justify-center rounded-full bg-teal-500/20 text-teal-400 border border-teal-500/30">
-                  <i data-lucide="check-circle-2" class="h-10 w-10"></i>
-                </span>
-                <h3 class="mt-6 text-2xl font-bold text-white">Booking Requested!</h3>
-                <p class="mt-3 max-w-md text-sm leading-relaxed text-slate-400">Your appointment request has been submitted successfully. Please save your token number below.</p>
-                <div class="mt-6 rounded-2xl border border-teal-500/30 bg-teal-500/10 px-8 py-5">
-                  <p class="text-xs uppercase tracking-wider text-teal-400 font-semibold mb-1">Your Token Number</p>
-                  <p id="registration-number" class="font-mono text-2xl font-bold tracking-widest text-white"></p>
-                </div>
-                <button type="button" id="new-booking" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold
+    document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const responseDiv = document.getElementById('responseMessage');
+        responseDiv.className = "message"; // reset classes
+        
+        const payload = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            date: document.getElementById('date').value,
+            time: document.getElementById('time').value
+        };
+
+        try {
+            const response = await fetch('http://127.0.0', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                responseDiv.innerText = result.message;
+                responseDiv.classList.add('success');
+                document.getElementById('bookingForm').reset();
+            } else {
+                responseDiv.innerText = result.error || "An error occurred.";
+                responseDiv.classList.add('error');
+            }
+        } catch (err) {
+            responseDiv.innerText = "Could not connect to the backend server.";
+            responseDiv.classList.add('error');
+        }
+    });
+</script>
+</body>
+</html>
